@@ -136,7 +136,7 @@ class User {
 
         try {
             $db = dbConn::getInstance();
-            $result = $db->insert($table, array('name' => $name, 'password' => $password, 'salt' => $salt));
+            $result = $db->insert('users', array('name' => $name, 'password' => $pass, 'salt' => $salt));
             $db->disconnect();
             return result;
         } catch(Exception $e) {

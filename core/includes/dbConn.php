@@ -40,7 +40,7 @@ class dbConn {
         $table = (string) $table;
         $values = (array) $values;
 
-        if(count(values) == 0) return;
+        if(count($values) == 0) return;
 
         $values = $this->quoteVals($values);
 
@@ -48,7 +48,7 @@ class dbConn {
         $vals = sprintf('(%s)', implode(',', array_values($values)));
 
         $query = sprintf('insert into %s %s values %s', $table, $params, $vals);
-        $result = execute($query);
+        $result = $this->execute($query);
 
         return $result;
     }
@@ -73,7 +73,7 @@ class dbConn {
 
         $results = array();
         while(($res = mysqli_fetch_assoc($result))) {
-            array_push($res);
+            array_push($results, $res);
         }
 
         return $results;

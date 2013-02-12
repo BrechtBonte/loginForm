@@ -1,4 +1,4 @@
-<h2>login</h2>
+<h2>Add a new account</h2>
 <form action="{$action}" method="post">
     <section class="formField">
         <label for="txtName">Username:</label><br />
@@ -12,7 +12,14 @@
         <span class="error">{$errPass}</span>
     </section>
 
+    <section class="formField">
+        <label for="txtRePass">Re&#45;enter Password:</label><br />
+        <input type="password" id="txtRePass" name="txtRePass" />
+        <span class="error">{$errRePass}</span>
+    </section>
+
     <section class="formButtons">
-        <input type="submit" name="submit" value="login" />
+        <input type="submit" name="submit" value="add" />
+        <input type="submit" name="submit" value="cancel" />
     </section>
 </form>
