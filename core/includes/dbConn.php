@@ -9,8 +9,15 @@ class dbConn {
     
     //<editor-fold desc="- connection -">
 
+    /**
+     * holds the connection to the database
+     * @var mysqli
+     */
     private $db;
 
+    /**
+     * connects the dbConn class to the database
+     */
     public function connect() {
         $this->db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_DB);
 
@@ -19,10 +26,17 @@ class dbConn {
         }
     }
 
+    /**
+     * disconnects the dbConn class from the database
+     */
     public function disconnect() {
         $this->db->close();
     }
 
+    /**
+     * gets an instance of the dbConn class
+     * @return dbConn
+     */
     public static function getInstance() {
         $var = new dbConn();
         $var->connect();

@@ -189,8 +189,8 @@ class User {
     }
 
     /**
-     *
-     * @return array all registered user
+     * gets all registered users
+     * @return array of User objects
      */
     public static function getAll() {
 
@@ -242,14 +242,35 @@ class User {
      */
     private static function encrypt($password, $salt = NULL) {
         $password = (string) $password;
+
         if($salt == NULL) {
-            $salt = self::generateSalt();
+
+            do {
+                $salt = self::generateSalt();
+            } while(self::saltExists($salt));
+
         } else {
             $salt = (string) $salt;
         }
 
         $pass = md5($salt.$password);
         return array($pass, $salt);
+    }
+
+
+    /**
+     * checks if a certain salt has already been used
+     * @param string $salt
+     * @return bool
+     */
+    private static function saltExists($salt) {
+        $salt = (string) $salt;
+
+        $db = dbConn::getInstance();
+        $results = $db->select('users', array('salt'), array('salt' => $salt));
+        $db->close();
+
+        return count($results) > 0;
     }
 
     //</editor-fold>
