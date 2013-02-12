@@ -91,7 +91,7 @@ class User {
 
         try {
             $db = dbConn::getInstance();
-            $result = $db->select('users', array('id'), array('name' => $name));
+            $result = $db->select('users', array('id', 'name'), array('name' => $name));
             $db->disconnect();
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -172,7 +172,7 @@ class User {
 
         try {
             $db = dbConn::getInstance();
-            $result = $db->select('users', array('password', 'salt'));
+            $result = $db->select('users', array('password', 'salt'), array('id' => $this->id));
             $db->disconnect();
         } catch(Exception $e) {
             error_log($e->getMessage());
