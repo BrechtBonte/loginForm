@@ -140,6 +140,8 @@ class dbConn {
             }
             $whereStr .= sprintf(' %s=%s', $key, is_string($value)? "'" . $this->db->real_escape_string($value) . "'" : $value);
         }
+
+        return $whereStr;
     }
     
 }
