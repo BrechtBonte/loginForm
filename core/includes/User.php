@@ -62,7 +62,7 @@ class User {
 
         try {
             $db = dbConn::getInstance();
-            $result = $db->select('users', array('name'), array('id' => $id));
+            $result = $db->select('users', array('id', 'name'), array('id' => $id));
             $db->disconnect();
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -116,7 +116,7 @@ class User {
      * @return bool
      */
     public static function exists($id) {
-        return getUserById($id) != null;
+        return self::getUserById($id) != null;
     }
 
     //</editor-fold>

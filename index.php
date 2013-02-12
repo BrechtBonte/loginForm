@@ -13,10 +13,20 @@
     }
 
     /* variables */
+    $users = User::getAll();
+    $user = User::getUserById($_SESSION['userId']);
+    $username = $user->name;
 
     /* Load template */
     $mainTpl = Template::getInstance(MAINTPL);
     $pageTpl = Template::getInstance(TEMPLATES . '/index.tpl');
+
+
+    /* build strings */
+    $usersString = '';
+    foreach($users as $usr) {
+        $usersString .= sprintf("<div>%s</div>\n", $usr->name);
+    }
 
 
 
@@ -24,6 +34,10 @@
 
         /* main template */
         $mainTpl->setVar('title', 'index');
+
+        /* page template */
+        $pageTpl->setVar('username', $username);
+        $pageTpl->setVar('users', $usersString);
 
 
         /* finalize */

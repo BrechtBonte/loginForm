@@ -3,7 +3,7 @@
     <head>
         <title>{$title} - Login Form</title>
         <style>
-            article#wrapper { width: 900px; margin: 0 auto; }
+            article#wrapper { width: 800px; margin: 0 auto; }
             .error { font-style: italic; color: red; font-size: 11px; }
         </style>
     </head>
