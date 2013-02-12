@@ -5,10 +5,18 @@
 
     /* Database variables */
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', 'B00nt33');
-define('DB_DB', 'loginform');
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', 'B00nt33');
+    define('DB_DB', 'loginform');
+
+
+    /* Path variables */
+
+    define('CORE', __DIR__ . '/..');
+    define('TEMPLATES', CORE . '/layout');
+
+    define('MAINTPL', TEMPLATES . '/general/main.tpl');
 
 
 ?>

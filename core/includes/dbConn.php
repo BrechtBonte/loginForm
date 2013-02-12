@@ -6,19 +6,43 @@
  * @author brecht.bonte
  */
 class dbConn {
+    
+    //<editor-fold desc="- connection -">
+
+    private $db;
+
+    public function connect() {
+        $this->db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_DB);
+
+        if(mysqli_connect_errno ($this->db)) {
+            throw new Exception('Connection failed: ' . mysqli_connect_error($this->db));
+        }
+    }
+
+    public function disconnect() {
+        $this->db->close();
+    }
+
+    public static function getInstance() {
+        $var = new dbConn();
+        $var->connect();
+        return $var;
+    }
+
+    //</editor-fold>
 
     /**
      * Insert values into a table
      * @param string $table table where values should be inserted
      * @param array $values assoc array with key => param name and value => value
      */
-    public static function insert($table, $values) {
+    public function insert($table, $values) {
         $table = (string) $table;
         $values = (array) $values;
 
         if(count(values) == 0) return;
 
-        $values = self::quoteVals($values);
+        $values = $this->quoteVals($values);
 
         $params = sprintf('(`%s`)', implode('`,`', array_keys($values)));
         $vals = sprintf('(%s)', implode(',', array_values($values)));
@@ -36,16 +60,16 @@ class dbConn {
      * @param array $where assoc array with key => param name and value => value, containing conditions for the select statement
      * @return array
      */
-    public static function select($table, $fields = array(), $where = array()) {
+    public function select($table, $fields = array(), $where = array()) {
         $table = (string) $table;
-        $values = (string) $values;
-        $where = (string) $where;
+        $fields = (array) $fields;
+        $where = (array) $where;
 
         $params = count($fields) == 0? '*' : implode(',', $fields);
-        $wheres = self::buildWhere($where);
+        $wheres = $this->buildWhere($where);
 
         $query = sprintf('select %s from %s%s', $params, $table, $wheres);
-        $result = execute($query);
+        $result = $this->execute($query);
 
         $results = array();
         while(($res = mysqli_fetch_assoc($result))) {
@@ -61,26 +85,22 @@ class dbConn {
      * @param string $query
      * @return Bool or mysqli_result object
      */
-    public static function execute($query) {
+    public function execute($query) {
         $query = (string) $query;
 
-        $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_DB);
-
-        if(mysqli_connect_errno ()) {
-            throw new Exception('Connection failed: ' . mysqli_connect_error());
+        if($this->db == null) {
+            throw new Exception('Not connected to the database');
         }
 
-        $result = mysqli_query($query);
-        if(mysqli_errno ()) {
-            throw new Exception('Query failed: ' . mysqli_error());
+        $result = mysqli_query($this->db, $query);
+        if(mysqli_errno ($this->db)) {
+            throw new Exception('Query failed: ' . mysqli_error($this->db));
         }
 
-        if($db->insert_id != 0) {
-            return $db->insert_id;
+        if($this->db->insert_id != 0) {
+            return $this->db->insert_id;
         }
         return $result;
-
-        $db->close();
     }
 
 
@@ -92,12 +112,12 @@ class dbConn {
      * @param array $values
      * @return array
      */
-    private static function quoteVals($values) {
+    private function quoteVals($values) {
         $values = (array) $values;
 
         foreach($values as $key => $val) {
             if(is_string($val)) {
-                $values[$key] = "'" . $val . "'";
+                $values[$key] = "'" . $this->db->real_escape_string($val) . "'";
             }
         }
 
@@ -108,7 +128,8 @@ class dbConn {
      * builds a string from the array containing the where clauses
      * @param array $where assoc array where key => param name and value => value
      */
-    private static function buildWhere($where) {
+    private function buildWhere($where) {
+        $where = (array) $where;
         $whereStr = '';
 
         foreach($where as $key => $value) {
@@ -117,7 +138,7 @@ class dbConn {
             } else {
                 $whereStr .= ' and';
             }
-            $whereStr .= sprintf(' %s=%s', $key, is_string($value)? "'" . $value . "'" : $value);
+            $whereStr .= sprintf(' %s=%s', $key, is_string($value)? "'" . $this->db->real_escape_string($value) . "'" : $value);
         }
     }
     

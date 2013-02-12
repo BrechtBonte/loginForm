@@ -57,9 +57,13 @@ class User {
      * @param int $id 
      * @return User
      */
-    public static function getUser($id) {
+    public static function getUserById($id) {
+        $id = (int) $id;
+
         try {
-            $result = dbConn::select('users', array('name'), array('id' => $id));
+            $db = dbConn::getInstance();
+            $result = $db->select('users', array('name'), array('id' => $id));
+            $db->disconnect();
         } catch (Exception $e) {
             error_log($e->getMessage());
             return null;
@@ -75,6 +79,44 @@ class User {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Creates a new user instance for the specified user
+     * @param string $name
+     * @return User
+     */
+    public static function getUserByName($name) {
+        $name = (string) $name;
+
+        try {
+            $db = dbConn::getInstance();
+            $result = $db->select('users', array('id'), array('name' => $name));
+            $db->disconnect();
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return null;
+        }
+
+        if(count($result) > 0) {
+            $usr = $result[0];
+
+            $var = new User();
+            $var->id = $usr['id'];
+            $var->name = $usr['name'];
+            return $var;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * checks if a user with the given id exists
+     * @param int $id
+     * @return bool
+     */
+    public static function exists($id) {
+        return getUserById($id) != null;
     }
 
     //</editor-fold>
@@ -93,7 +135,9 @@ class User {
         list($pass, $salt) = self::encrypt($password);
 
         try {
-            $result = dbConn::insert($table, array('name' => $name, 'password' => $password, 'salt' => $salt));
+            $db = dbConn::getInstance();
+            $result = $db->insert($table, array('name' => $name, 'password' => $password, 'salt' => $salt));
+            $db->disconnect();
             return result;
         } catch(Exception $e) {
             error_log($e->getMessage());
@@ -109,8 +153,10 @@ class User {
         $name = (string) $name;
 
         try {
-            $result = dbConn::select('users', array(), array('name' => $name));
-            return count($result > 0);
+            $db = dbConn::getInstance();
+            $result = $db->select('users', array(), array('name' => $name));
+            $db->disconnect();
+            return count($result) > 0;
         } catch(Exception $e) {
             error_log($e->getMessage());
             return null;
@@ -125,7 +171,9 @@ class User {
         $password = (string) $password;
 
         try {
-            $result = dbConn::select('users', array('password', 'salt'));
+            $db = dbConn::getInstance();
+            $result = $db->select('users', array('password', 'salt'));
+            $db->disconnect();
         } catch(Exception $e) {
             error_log($e->getMessage());
             return null;
@@ -149,7 +197,9 @@ class User {
         $arr = array();
 
         try {
-            $result = dbConn::select('users', array('id', 'name'));
+            $db = dbConn::getInstance();
+            $result = $db->select('users', array('id', 'name'));
+            $db->disconnect();
         } catch(Exception $e) {
             error_log($e->getMessage());
             return null;
