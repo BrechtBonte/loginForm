@@ -1,18 +1,13 @@
-<h2>login</h2>
-<form action="{$action}" method="post">
-    <section class="formField">
-        <label for="txtName">Username:</label><br />
-        <input type="text" id="txtName" name="txtName" value="{$username}" />
-        <span class="error">{$errUsername}</span>
-    </section>
+{% extends 'general/main.twig' %}
+{% import 'general/forms.twig' as forms %}
 
-    <section class="formField">
-        <label for="txtPass">Password:</label><br />
-        <input type="password" id="txtPass" name="txtPass" />
-        <span class="error">{$errPass}</span>
-    </section>
+{% block title %}Login{% endblock %}
 
-    <section class="formButtons">
-        <input type="submit" name="submit" value="login" />
-    </section>
-</form>
+{% block content %}
+    <h2>login</h2>
+    <form action="{{ action }}" method="post">
+        {{ forms.input_field('txtName', 'Username', username, errUsername) }}
+        {{ forms.input_field('txtPass', 'Password', '', errPass, 'password') }}
+        {{ forms.buttons('login', false) }}
+    </form>
+{% endblock %}

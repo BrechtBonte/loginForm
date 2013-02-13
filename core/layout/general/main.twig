@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>{$title} - Login Form</title>
+        <title>{% block title %}{% endblock %} - Login Form</title>
         <style>
             article#wrapper { width: 800px; margin: 0 auto; }
             .error { font-style: italic; color: red; font-size: 11px; }
@@ -11,7 +11,7 @@
         <article id="wrapper">
             <h1>Login Form</h1>
             <article id="content">
-                {$content}
+                {% block content %}{% endblock %}
             </article>
         </article>
     </body>

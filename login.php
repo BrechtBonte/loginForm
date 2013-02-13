@@ -14,10 +14,7 @@
     $errPass = '';
 
     /* Load template */
-    $mainTpl = Template::getInstance(MAINTPL);
-    $pageTpl = Template::getInstance(TEMPLATES . '/login.tpl');
-
-
+    $page = new Page('login');
 
     /* Actions */
     if(isset($_POST['submit'])) {
@@ -41,7 +38,7 @@
             } else {
                 $user = $userDatastore->getUserByName($username);
 
-                if(!$userDatastore->checkPass($user, $password)) {
+                if(!$userPassGen->checkPass($user, $password)) {
                     $errPass = 'This password is not right for the specified user';
                     
                 } else {
@@ -55,19 +52,11 @@
 
 
     /* parse template */
+    $page->setVars(array(
+        'action'        => $_SERVER['PHP_SELF'],
+        'username'      => htmlentities($username),
+        'errUsername'   => $errName,
+        'errPass'       => $errPass
+    ));
 
-        /* main template */
-        $mainTpl->setVar('title', 'login');
-
-        /* Page templte */
-        $pageTpl->setVars(array(
-            'action'        => $_SERVER['PHP_SELF'],
-            'username'      => htmlentities($username),
-            'errUsername'   => $errName,
-            'errPass'       => $errPass
-        ));
-
-        /* finalize */
-        $mainTpl->setVar('content', $pageTpl->getContent());
-        echo $mainTpl->getContent();
-?>
+    echo $page->render();

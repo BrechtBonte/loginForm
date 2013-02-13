@@ -1,24 +1,9 @@
 <?php
-
-/**
- * Class to insert text into template files
- *
- * @author brecht.bonte
- */
 class Template {
 
-    /**
-     * holds the text
-     * @var string
-     */
+    /** @var string */
     private $template;
 
-
-    /**
-     * creates a template object for the supplied file
-     * @param string $path
-     * @return Template
-     */
     public static function getInstance($path) {
         $var = new Template();
         $res = $var->loadTemplate($path);

@@ -1,0 +1,14 @@
+{% macro input_field(name, dispName, value, error, type = 'text') %}
+    <section class="formField">
+        <label for="{{ name }}">{{ dispName }}:</label><br />
+        <input type="{{ type }}" id="{{ name }}" name="{{ name }}" value="{{ value }}" />
+        <span class="error">{{ error }}</span>
+    </section>
+{% endmacro %}
+
+{% macro buttons(text, cancel, cancelText = 'cancel') %}
+    <section class="formButtons">
+        <input type="submit" name="submit" value="{{ text }}" />{% if cancel %}
+        <input type="submit" name="submit" value="{{ cancelText }}" />{% endif %}
+    </section>
+{% endmacro %}

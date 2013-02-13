@@ -14,8 +14,7 @@
     $errRePass = '';
 
     /* Load template */
-    $mainTpl = Template::getInstance(MAINTPL);
-    $pageTpl = Template::getInstance(TEMPLATES . '/newAccount.tpl');
+    $page = new Page('newAccount');
 
 
 
@@ -63,31 +62,20 @@
         }
 
         if($allOk) {
-            $userDatastore->addUser($username, $pass);
+            list($password, $salt) = $userPassGen->encrypt($pass);
+            $userDatastore->addUser(new User($username, $password, $salt));
             header('location: index.php');
             exit(0);
         }
     }
 
-
-
-
     /* parse template */
+    $page->setVars(array(
+        'action'        => $_SERVER['PHP_SELF'],
+        'username'      => $username,
+        'errUsername'   => $errName,
+        'errPass'       => $errPass,
+        'errRePass'     => $errRePass
+    ));
 
-        /* main template */
-        $mainTpl->setVar('title', 'add new account');
-
-        /* page template */
-        $pageTpl->setVars(array(
-            'action'        => $_SERVER['PHP_SELF'],
-            'username'      => $username,
-            'errUsername'   => $errName,
-            'errPass'       => $errPass,
-            'errRePass'     => $errRePass
-        ));
-
-
-        /* finalize */
-        $mainTpl->setVar('content', $pageTpl->getContent());
-        echo $mainTpl->getContent();
-?>
+    echo $page->render();

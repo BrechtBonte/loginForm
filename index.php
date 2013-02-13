@@ -12,32 +12,13 @@
     $user = $userDatastore->getUserById($_SESSION['userId']);
     $username = $user->getName();
 
-    /* Load template */
-    $mainTpl = Template::getInstance(MAINTPL);
-    $pageTpl = Template::getInstance(TEMPLATES . '/index.tpl');
-
-
-    /* build strings */
-    $usersString = '';
-    foreach($users as $usr) {
-        $usersString .= sprintf("<div>%s</div>\n", $usr->getName());
-    }
-
-
-
+    /* Load page */
+    $page = new Page('index');
+    
     /* parse template */
+    $page->setVars(array(
+        'username'  => $username,
+        'users'     => $users
+    ));
 
-        /* main template */
-        $mainTpl->setVar('title', 'index');
-
-        /* page template */
-        $pageTpl->setVars(array(
-            'username'  => $username,
-            'users'     => $usersString
-        ));
-
-
-        /* finalize */
-        $mainTpl->setVar('content', $pageTpl->getContent());
-        echo $mainTpl->getContent();
-?>
+    echo $page->render();
