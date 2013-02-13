@@ -1,10 +1,5 @@
 <?php
-    session_start();
-
-    /* Requires */
-    require_once('core/includes/Config.php');
-    require_once('core/includes/Template.php');
-    require_once('core/includes/User.php');
+    require_once('core/includes/require.php');
 
     /* redir checks */
     if(!isset($_SESSION['userId']) || !User::exists($_SESSION['userId'])) {

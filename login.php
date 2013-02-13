@@ -1,10 +1,5 @@
 <?php
-    session_start();
-
-    /* Requires */
-    require_once('core/includes/Config.php');
-    require_once('core/includes/Template.php');
-    require_once('core/includes/User.php');
+    require_once('core/includes/require.php');
 
     /* redir checks */
     if(isset($_SESSION['userId'])) {
@@ -49,7 +44,7 @@
                 if(!$user->checkPass($password)) {
                     $errPass = 'This password is not right for the specified user';
                 } else {
-                    $_SESSION['userId'] = $user->id;
+                    $_SESSION['userId'] = $user->getId();
                     header('location: index.php');
                 }
             }

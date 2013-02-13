@@ -5,7 +5,7 @@
  * @author brecht.bonte
  */
 
-require_once 'dbConn.php';
+require_once 'UserDatastore.php';
 
 class User {
 
@@ -22,35 +22,103 @@ class User {
      * @var string
      */
     private $name;
+
+    /**
+     * hashed password of the user
+     * @var string
+     */
+    private $password;
+
+    /**
+     * salt used by the usre
+     * @var string
+     */
+    private $salt;
+
+    /**
+     * datastore that contains all database related methods
+     * @var UserDatastore
+     */
+    private static $datastore;
     
     /**
-     * http://stackoverflow.com/questions/4478661/getter-and-setter
-     * Return requested propreties
+     * gets the user's id proprety
+     * @return int
      */
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getId() {
+        return $this->id;
     }
-    //</editor-fold>
 
-    //<editor-fold desc="- constructor -">
+    /**
+     * gets the user's name proprety
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * gets the user's hashed password
+     * @return string
+     */
+    public function getPassword() {
+        return $this->password;
+    }
+
+    /**
+     * gets the user's salt
+     * @return salt
+     */
+    public function getSalt() {
+        return $this->salt;
+    }
+
+
+        //</editor-fold>
+
+    //<editor-fold desc="- constructors -">
 
     /**
      * creates new user instance
      * @param int $id
      * @param string $name
-     * @return User
+     * @param string $password
+     * @param sring $salt
      */
-    public static function getInstance($id, $name) {
+    public function __construct($id, $name, $password, $salt) {
         $id = (int) $id;
         $name = (string) $name;
+        $password = (string) $password;
+        $salt = (string) $salt;
 
-        $var = new User();
-        $var->id = $id;
-        $var->name = $name;
-        return $var;
+        $this->id = $id;
+        $this->name = $name;
+        $this->password = $password;
+        $this->salt = $salt;
     }
+
+    /**
+     * creates a new user according to an array
+     * @param array $arr
+     * @return User
+     */
+    public static function getUserByArray($arr) {
+        return new User($arr['id'], $arr['name'], $arr['password'], $arr['salt']);
+    }
+
+    /**
+     * initializes the static functionality of the User class
+     */
+    public static function init() {
+        if(self::$datastore === null) {
+            self::$datastore = UserMysqlDatastore::getInstance();
+        }
+    }
+
+    //</editor-fold>
+
+
+    //<editor-fold desc="- getters -">
 
     /**
      * Creates a new user instance for the specified user
@@ -60,25 +128,7 @@ class User {
     public static function getUserById($id) {
         $id = (int) $id;
 
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->select('users', array('id', 'name'), array('id' => $id));
-            $db->disconnect();
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
-
-        if(count($result) > 0) {
-            $usr = $result[0];
-
-            $var = new User();
-            $var->id = $usr['id'];
-            $var->name = $usr['name'];
-            return $var;
-        } else {
-            return null;
-        }
+        return self::$datastore->getUserById($id);
     }
 
     /**
@@ -89,25 +139,7 @@ class User {
     public static function getUserByName($name) {
         $name = (string) $name;
 
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->select('users', array('id', 'name'), array('name' => $name));
-            $db->disconnect();
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
-
-        if(count($result) > 0) {
-            $usr = $result[0];
-
-            $var = new User();
-            $var->id = $usr['id'];
-            $var->name = $usr['name'];
-            return $var;
-        } else {
-            return null;
-        }
+        return self::$datastore->getUserByName($name);
     }
     
     /**
@@ -116,7 +148,7 @@ class User {
      * @return bool
      */
     public static function exists($id) {
-        return self::getUserById($id) != null;
+        return self::$datastore->userExists($id);
     }
 
     //</editor-fold>
@@ -134,15 +166,9 @@ class User {
 
         list($pass, $salt) = self::encrypt($password);
 
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->insert('users', array('name' => $name, 'password' => $pass, 'salt' => $salt));
-            $db->disconnect();
-            return result;
-        } catch(Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
+        $user = new User(0, $name, $pass, $salt);
+
+        return self::$datastore->addUser($user);
     }
 
     /**
@@ -152,15 +178,7 @@ class User {
     public static function checkName($name) {
         $name = (string) $name;
 
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->select('users', array(), array('name' => $name));
-            $db->disconnect();
-            return count($result) > 0;
-        } catch(Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
+        return self::$datastore->userNameExists($name);
     }
 
     /**
@@ -170,22 +188,9 @@ class User {
     public function checkPass($password) {
         $password = (string) $password;
 
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->select('users', array('password', 'salt'), array('id' => $this->id));
-            $db->disconnect();
-        } catch(Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
+        $enc = md5($this->salt.$password);
 
-        $res = $result[0];
-        $pass = $res['password'];
-        $salt = $res['salt'];
-
-        $enc = md5($salt.$password);
-
-        return $pass == $enc;
+        return $this->password == $enc;
     }
 
     /**
@@ -194,22 +199,7 @@ class User {
      */
     public static function getAll() {
 
-        $arr = array();
-
-        try {
-            $db = dbConn::getInstance();
-            $result = $db->select('users', array('id', 'name'));
-            $db->disconnect();
-        } catch(Exception $e) {
-            error_log($e->getMessage());
-            return null;
-        }
-
-        foreach($result as $res) {
-            array_push($arr, self::getInstance($res['id'], $res['name']));
-        }
-
-        return $arr;
+        return self::$datastore->getAll();
     }
 
     //</editor-fold>
@@ -247,7 +237,7 @@ class User {
 
             do {
                 $salt = self::generateSalt();
-            } while(self::saltExists($salt));
+            } while(self::$datastore->saltExists($salt));
 
         } else {
             $salt = (string) $salt;
@@ -257,23 +247,9 @@ class User {
         return array($pass, $salt);
     }
 
-
-    /**
-     * checks if a certain salt has already been used
-     * @param string $salt
-     * @return bool
-     */
-    private static function saltExists($salt) {
-        $salt = (string) $salt;
-
-        $db = dbConn::getInstance();
-        $results = $db->select('users', array('salt'), array('salt' => $salt));
-        $db->close();
-
-        return count($results) > 0;
-    }
-
     //</editor-fold>
 }
+
+User::Init();
 
 ?>
