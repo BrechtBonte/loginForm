@@ -2,14 +2,14 @@
     require_once('core/includes/require.php');
 
     /* redir checks */
-    if(!isset($_SESSION['userId']) || !User::exists($_SESSION['userId'])) {
+    if(!isset($_SESSION['userId']) || !$userDatastore->userExists($_SESSION['userId'])) {
         header('location: login.php');
         exit(0);
     }
 
     /* variables */
-    $users = User::getAll();
-    $user = User::getUserById($_SESSION['userId']);
+    $users = $userDatastore->getAll();
+    $user = $userDatastore->getUserById($_SESSION['userId']);
     $username = $user->getName();
 
     /* Load template */
@@ -31,8 +31,10 @@
         $mainTpl->setVar('title', 'index');
 
         /* page template */
-        $pageTpl->setVar('username', $username);
-        $pageTpl->setVar('users', $usersString);
+        $pageTpl->setVars(array(
+            'username'  => $username,
+            'users'     => $usersString
+        ));
 
 
         /* finalize */

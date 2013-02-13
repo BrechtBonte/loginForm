@@ -2,7 +2,7 @@
     require_once('core/includes/require.php');
 
     /* redir checks */
-    if(!isset($_SESSION['userId']) || !User::exists($_SESSION['userId'])) {
+    if(!isset($_SESSION['userId']) || !$userDatastore->userExists($_SESSION['userId'])) {
         header('location: login.php');
         exit(0);
     }
@@ -30,34 +30,40 @@
             $errName = 'Please fill in a username';
             $allOk = false;
 
-        } else if(strlen($username) > 20) {
-            $errName = 'Please limit your username to 20 characters';
-            $allOk = false;
-
-        } else if(User::checkName($username)) {
-            $errName = 'this username is already taken';
-            $allOk = false;
+        } else {
+            if(strlen($username) > 20) {
+                $errName = 'Please limit your username to 20 characters';
+                $allOk = false;
+            } else {
+                if($userDatastore->usernameExists($username)) {
+                    $errName = 'this username is already taken';
+                    $allOk = false;
+                }
+            }
         }
 
         if($pass == '') {
             $errPass = 'Please fill in a password';
             $allOk = false;
-
-        } else if(strlen($pass) > 12) {
-            $errPass = 'Please limit your password to 12 characters';
-            $allOk = false;
-
-        } else if($repass == '') {
-            $errRePass = 'Please re-enter the password';
-            $allOk = false;
-
-        } else if($pass != $repass) {
-            $errPass = 'The passwords did not match';
-            $allOk = false;
+        } else {
+            if(strlen($pass) > 12) {
+                $errPass = 'Please limit your password to 12 characters';
+                $allOk = false;
+            } else {
+                if($repass == '') {
+                    $errRePass = 'Please re-enter the password';
+                    $allOk = false;
+                } else  {
+                    if($pass != $repass) {
+                        $errPass = 'The passwords did not match';
+                        $allOk = false;
+                    }
+                }
+            }
         }
 
         if($allOk) {
-            User::addNew($username, $pass);
+            $userDatastore->addUser($username, $pass);
             header('location: index.php');
             exit(0);
         }
@@ -72,11 +78,13 @@
         $mainTpl->setVar('title', 'add new account');
 
         /* page template */
-        $pageTpl->setVar('action', $_SERVER['PHP_SELF']);
-        $pageTpl->setVar('username', $username);
-        $pageTpl->setVar('errUsername', $errName);
-        $pageTpl->setVar('errPass', $errPass);
-        $pageTpl->setVar('errRePass', $errRePass);
+        $pageTpl->setVars(array(
+            'action'        => $_SERVER['PHP_SELF'],
+            'username'      => $username,
+            'errUsername'   => $errName,
+            'errPass'       => $errPass,
+            'errRePass'     => $errRePass
+        ));
 
 
         /* finalize */

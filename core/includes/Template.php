@@ -49,6 +49,17 @@ class Template {
     }
 
     /**
+     * sets vars according to an assoc array
+     * @param array $values
+     */
+    public function setVars($values) {
+
+        foreach($values as $key => $value) {
+            $this->setVar($key, $value);
+        }
+    }
+
+    /**
      * returns the (modified) content of the template
      * @return string
      */

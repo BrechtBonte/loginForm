@@ -11,4 +11,7 @@
     require_once('Template.php');
     require_once('User.php');
 
+    /* Initialize datastore */
+    $userDatastore = UserMysqlDatastore::getInstance();
+
 ?>

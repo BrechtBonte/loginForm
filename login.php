@@ -36,13 +36,14 @@
         }
 
         if($allOk) {
-            if(!User::checkName($username)) {
+            if(!$userDatastore->usernameExists($username)) {
                 $errName = 'There is no user with this username';
             } else {
-                $user = User::getUserByName($username);
+                $user = $userDatastore->getUserByName($username);
 
-                if(!$user->checkPass($password)) {
+                if(!$userDatastore->checkPass($user, $password)) {
                     $errPass = 'This password is not right for the specified user';
+                    
                 } else {
                     $_SESSION['userId'] = $user->getId();
                     header('location: index.php');
@@ -59,10 +60,12 @@
         $mainTpl->setVar('title', 'login');
 
         /* Page templte */
-        $pageTpl->setVar('action', $_SERVER['PHP_SELF']);
-        $pageTpl->setVar('username', htmlentities($username));
-        $pageTpl->setVar('errUsername', $errName);
-        $pageTpl->setVar('errPass', $errPass);
+        $pageTpl->setVars(array(
+            'action'        => $_SERVER['PHP_SELF'],
+            'username'      => htmlentities($username),
+            'errUsername'   => $errName,
+            'errPass'       => $errPass
+        ));
 
         /* finalize */
         $mainTpl->setVar('content', $pageTpl->getContent());
