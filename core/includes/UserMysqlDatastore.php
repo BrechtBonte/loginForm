@@ -18,11 +18,12 @@ class UserMysqlDatastore {
     
     private function  __construct() {
         if(self::$db === null) {
+            global $config;
             self::$db = new Zend_Db_Adapter_Mysqli(array(
-                'host'      => DB_HOST,
-                'username'  => DB_USER,
-                'password'  => DB_PASS,
-                'dbname'    => DB_DB
+                'host'      => $config->database->host,
+                'username'  => $config->database->user,
+                'password'  => $config->database->pass,
+                'dbname'    => $config->database->name
             ));
         }
     }

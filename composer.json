@@ -3,11 +3,6 @@
         {
             "type": "git",
             "url": "git@github.com:marlon-be/zend-framework"
-        },
-        
-        {
-            "type": "git",
-            "url": "git@github.com:fabpot/Twig"
         }
     ],
     

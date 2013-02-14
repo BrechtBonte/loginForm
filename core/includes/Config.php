@@ -1,17 +1,25 @@
 <?php
-    /* Database variables */
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', 'B00nt33');
-    define('DB_DB', 'loginform');
 
-    /* Path variables */
-    define('INCLUDES', __DIR__);
-    define('CORE', INCLUDES . '/..');
-    define('TEMPLATES', CORE . '/layout');
-    define('VENDOR', CORE . '/../vendor');
-    define('ZEND_LIB', VENDOR . '/marlon-be/zend-framework/library');
-    define('MAINTPL', TEMPLATES . '/general/main.tpl');
-
-    /* set include paths */
-    ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . INCLUDES);
+class Config extends Zend_Config_Ini {
+    
+    /** @var string */
+    protected $filename;
+    
+    public function __construct($filename, $section = null, $options = false) {
+        $this->filename = $filename;
+        parent::__construct($filename, $section, $options);
+        $this->parseSpecial($this->_data);
+    }
+    
+    public function parseSpecial(array &$data) {
+        foreach($data as &$item) {
+            if(is_string($item)) {
+                $item = preg_replace("/\{__FILE__\}/", $this->filename, $item);
+                $item = preg_replace("/\{__DIR__\}/", dirname($this->filename), $item);
+            }
+            if($item instanceof Zend_Config) {
+                $this->parseSpecial($item->_data);
+            }
+        }
+    }
+}

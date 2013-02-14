@@ -24,7 +24,8 @@ class Page {
     }
     
     public function render() {
-        $loader = new Twig_Loader_Filesystem(TEMPLATES);
+        global $config;
+        $loader = new Twig_Loader_Filesystem($config->path->templates);
         $twig = new Twig_Environment($loader);
         $function = new Twig_SimpleFunction('self', function () {
             return $_SERVER['PHP_SELF'];
