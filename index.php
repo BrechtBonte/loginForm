@@ -2,14 +2,14 @@
     require_once('core/includes/require.php');
 
     /* redir checks */
-    if(!isset($_SESSION['userId']) || !$userDatastore->userExists($_SESSION['userId'])) {
+    if(!isset($_SESSION['userId']) || !$em->find('LoginForm\Users\User', $_SESSION['userId'])) {
         header('location: login.php');
         exit(0);
     }
 
     /* variables */
-    $users = $userDatastore->getAll();
-    $user = $userDatastore->getUserById($_SESSION['userId']);
+    $users = $em->getRepository('LoginForm\Users\User')->findAll();
+    $user = $em->find('LoginForm\Users\User', $_SESSION['userId']);
     $username = $user->getName();
 
     /* Load page */

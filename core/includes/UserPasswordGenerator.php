@@ -1,12 +1,11 @@
 <?php
 
-require_once('UserMysqlDatastore.php');
-require_once('User.php');
+use LoginForm\Users\User;
 
 class UserPasswordGenerator {
 
     /** @var UserDatastore */
-    private static $dataStore;
+//    private static $dataStore;
     
     /** @var UserPasswordGenerator */
     private static $instance;
@@ -18,11 +17,11 @@ class UserPasswordGenerator {
         return self::$instance;
     }
 
-    private function __construct() {
-        if(self::$dataStore === null) {
-            self::$dataStore = UserMysqlDatastore::getInstance();
-        }
-    }
+//    private function __construct() {
+//        if(self::$dataStore === null) {
+//            self::$dataStore = UserMysqlDatastore::getInstance();
+//        }
+//    }
 
     /* http://code.activestate.com/recipes/576894-generate-a-salt/ */
     private function generateSalt($max = 32) {
@@ -39,9 +38,10 @@ class UserPasswordGenerator {
     /** @return array (password, salt) */
     public function encrypt($password, $salt = NULL) {
         if($salt === NULL) {
+            global $em;
             do {
                 $salt = $this->generateSalt();
-            } while(self::$dataStore->saltExists($salt));
+            } while($em->getRepository('LoginForm\Users\User')->findBySalt($salt));
 
         } else {
             $salt = (string) $salt;

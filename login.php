@@ -1,5 +1,8 @@
 <?php
     require_once('core/includes/require.php');
+    
+    /* get repo's */
+    $userRep = $em->getRepository('LoginForm\Users\User');
 
     /* redir checks */
     if(isset($_SESSION['userId'])) {
@@ -33,10 +36,10 @@
         }
 
         if($allOk) {
-            if(!$userDatastore->usernameExists($username)) {
+            if(!$userRep->findByName($username)) {
                 $errName = 'There is no user with this username';
             } else {
-                $user = $userDatastore->getUserByName($username);
+                $user = $userRep->findOneByName($username);
 
                 if(!$userPassGen->checkPass($user, $password)) {
                     $errPass = 'This password is not right for the specified user';

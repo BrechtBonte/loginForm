@@ -2,7 +2,7 @@
     require_once('core/includes/require.php');
 
     /* redir checks */
-    if(!isset($_SESSION['userId']) || !$userDatastore->userExists($_SESSION['userId'])) {
+    if(!isset($_SESSION['userId']) || !$em->find('LoginForm\Users\User', $_SESSION['userId'])) {
         header('location: login.php');
         exit(0);
     }
@@ -34,7 +34,7 @@
                 $errName = 'Please limit your username to 20 characters';
                 $allOk = false;
             } else {
-                if($userDatastore->usernameExists($username)) {
+                if($em->getRepository('LoginForm\Users\User')->findByName($username)) {
                     $errName = 'this username is already taken';
                     $allOk = false;
                 }
@@ -63,7 +63,8 @@
 
         if($allOk) {
             list($password, $salt) = $userPassGen->encrypt($pass);
-            $userDatastore->addUser(new User($username, $password, $salt));
+            $em->persist(new LoginForm\Users\User($username, $password, $salt));
+            $em->flush();
             header('location: index.php');
             exit(0);
         }

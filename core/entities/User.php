@@ -1,20 +1,48 @@
 <?php
+namespace LoginForm\Users;
+
+use LoginForm\Enums\Language;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/** @Entity @Table(name="users") */
 class User {
+    /** 
+     * @Id @Column(type="integer") @GeneratedValue(strategy="AUTO")
+     * @var int
+     */
+    protected $id;
 
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $name;
-
-    /**
-     * hashed password
+    /** 
+     * @Column(type="string", length=20)
      * @var string
      */
-    private $password;
+    protected $name;
 
-    /** @var string */
-    private $salt;
+    /**
+     * @Column(type="string", length=32)
+     * @var string
+     * hashed password
+     */
+    protected $password;
+
+    /** 
+     * @Column(type="string", length=32)
+     * @var string
+     */
+    protected $salt;
+    
+    
+    /**
+     * @OneToOne(targetEntity="LoginForm\Enums\Language")
+     * @var Language
+     */
+    protected $language;
+    
+    /**
+     * @ManyToMany(targetEntity="LoginForm\Groups\Group", inversedBy="users")
+     * @var ArrayCollection
+     */
+    protected $groups;
     
     public function getId() {
         return $this->id;
@@ -31,16 +59,21 @@ class User {
     public function getSalt() {
         return $this->salt;
     }
+    
+    public function getLanguage() {
+        return $this->language;
+    }
 
-    public function __construct($name, $password, $salt) {
+    public function getGroups() {
+        return $this->groups;
+    }
+
+    public function __construct($name, $password, $salt, Language $language = null) {
         $this->name = (string) $name;
         $this->password = (string) $password;
         $this->salt = (string) $salt;
-    }
-
-    public static function getUserByArray(array $arr) {
-        $user = new User($arr['name'], $arr['password'], $arr['salt']);
-        $user->id = $arr['id'];
-        return $user;
+        $this->language = $language;
+        
+        $this->groups = new ArrayCollection();
     }
 }
