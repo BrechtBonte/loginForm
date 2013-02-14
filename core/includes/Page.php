@@ -26,6 +26,10 @@ class Page {
     public function render() {
         $loader = new Twig_Loader_Filesystem(TEMPLATES);
         $twig = new Twig_Environment($loader);
+        $function = new Twig_SimpleFunction('self', function () {
+            return $_SERVER['PHP_SELF'];
+        });
+        $twig->addFunction($function);
         return $twig->render($this->name . '.twig', $this->vars);
     }
 }

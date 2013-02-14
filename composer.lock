@@ -1,0 +1,69 @@
+{
+    "hash": "a8b257e705803b13ad27bf1e9fddaec5",
+    "packages": [
+        {
+            "name": "marlon-be/zend-framework",
+            "version": "1.11.14",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:marlon-be/zend-framework",
+                "reference": "1.11.14"
+            },
+            "time": "2012-09-05 08:10:00",
+            "type": "library",
+            "autoload": {
+                "classmap": "library/"
+            }
+        },
+        {
+            "name": "twig/twig",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:fabpot/Twig",
+                "reference": "72c8bb73e90cf6d2e992b01ab508f7fc13e38c8f"
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "time": "2013-02-09 18:37:02",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ]
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": [
+
+    ]
+}

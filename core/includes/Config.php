@@ -9,9 +9,9 @@
     define('INCLUDES', __DIR__);
     define('CORE', INCLUDES . '/..');
     define('TEMPLATES', CORE . '/layout');
-    define('LIBRARY', CORE . '/../library');
+    define('VENDOR', CORE . '/../vendor');
+    define('ZEND_LIB', VENDOR . '/marlon-be/zend-framework/library');
     define('MAINTPL', TEMPLATES . '/general/main.tpl');
 
     /* set include paths */
     ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . INCLUDES);
-    ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY);
