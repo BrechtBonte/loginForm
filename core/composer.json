@@ -1,0 +1,22 @@
+{
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:marlon-be/zend-framework"
+        }
+    ],
+    
+    "require": {
+        "marlon-be/zend-framework": "1.11.*",
+        "twig/twig": "1.12.*",
+        "doctrine/orm": "2.*",
+        "symfony/console": "2.*",
+        "symfony/yaml": "2.*"
+    },
+    
+    "autoload": {
+        "psr-0": {"": "entities"}
+    },
+
+    "minimum-stability": "dev"
+}
