@@ -2,10 +2,10 @@
     require_once('core/includes/require.php');
 
     /* redir checks */
-    if(!isset($_SESSION['userId']) || !$em->find('LoginForm\Users\User', $_SESSION['userId'])) {
-        header('location: login.php');
-        exit(0);
-    }
+//    if(!isset($_SESSION['userId']) || !$em->find('LoginForm\Users\User', $_SESSION['userId'])) {
+//        header('location: login.php');
+//        exit(0);
+//    }
 
     /* variables */
     $username = isset($_POST['txtName'])? $_POST['txtName'] : '';

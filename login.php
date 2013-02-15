@@ -5,7 +5,7 @@
     $userRep = $em->getRepository('LoginForm\Users\User');
 
     /* redir checks */
-    if(isset($_SESSION['userId'])) {
+    if(isset($_SESSION['userId']) && $em->find('LoginForm\Users\User', $_SESSION['userId'])) {
         header('location: index.php');
         exit(0);
     }

@@ -7,14 +7,8 @@ $driverImpl = $docConf->newDefaultAnnotationDriver($config->path->entities);
 $docConf->setMetadataDriverImpl($driverImpl);
 $docConf->setProxyDir($config->path->proxies);
 $docConf->setProxyNamespace('LoginForm\Proxies');
-$docConf->setAutoGenerateProxyClasses(true);
+$docConf->setAutoGenerateProxyClasses($config->doctrine->genProxies);
 
-$connectionOptions = array(
-    'driver'    => $config->database->driver,
-    'host'      => $config->database->host,
-    'user'      => $config->database->user,
-    'password'  => $config->database->pass,
-    'dbname'    => $config->database->name
-);
+$connectionOptions = $config->database->toArray();
 
 return EntityManager::create($connectionOptions, $docConf);
