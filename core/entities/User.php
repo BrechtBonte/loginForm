@@ -1,6 +1,7 @@
 <?php
 namespace LoginForm\Users;
 
+use LoginForm\Groups\Group;
 use LoginForm\Enums\Language;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -76,4 +77,15 @@ class User {
         
         $this->groups = new ArrayCollection();
     }
+    
+    public function setLanguage(Language $language) {
+        $this->language = $language;
+    }
+
+    public function addGroup(Group $group) {
+        $this->groups[] = $group;
+        array_push($group->getUsers(), $this);
+    }
+
+
 }

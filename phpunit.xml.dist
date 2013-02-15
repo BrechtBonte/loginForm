@@ -1,0 +1,7 @@
+<phpunit bootstrap="./core/includes/require.php" addUncoveredFilesFromWhitelist="false" colors="true">
+  <testsuites>
+    <testsuite name="LoginForm_Entities">
+      <directory>core/tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

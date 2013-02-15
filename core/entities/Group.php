@@ -32,9 +32,14 @@ class Group {
         return $this->users;
     }
 
-    function __construct($name) {
+    public function __construct($name) {
         $this->name = $name;
         
         $this->users = new ArrayCollection();
+    }
+    
+    public function addUser(User $user) {
+        $this->users[] = $user;
+        array_push($user->getGroups(), $this);
     }
 }
