@@ -17,7 +17,7 @@
     $errPass = '';
 
     /* Load template */
-    $page = new Page('login');
+    $page = new LoginForm\Includes\Page('login');
 
     /* Actions */
     if(isset($_POST['submit'])) {

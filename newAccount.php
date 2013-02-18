@@ -14,7 +14,7 @@
     $errRePass = '';
 
     /* Load template */
-    $page = new Page('newAccount');
+    $page = new LoginForm\Includes\Page('newAccount');
 
 
 

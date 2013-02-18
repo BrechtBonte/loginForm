@@ -1,6 +1,8 @@
 <?php
     session_start();
     
+    ini_set('memory_limit', '1024M');
+    
     define('APLICATION_PATH', __DIR__ . '/../../');
     
     /* AutoLoader */
@@ -8,7 +10,7 @@
     
     
     // Config
-    $config = new Zend_Config_Ini(APLICATION_PATH . 'core/config/config.ini', 'sqliteTest');
+    $config = new Zend_Config_Ini(APLICATION_PATH . 'core/config/config.ini', 'sqliteDev');
     ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . $config->path->includes);
 
     // Doctrine
@@ -22,4 +24,4 @@
     
 
     /* Initialize properties */
-    $userPassGen = UserPasswordGenerator::getInstance();
+    $userPassGen = LoginForm\Includes\UserPasswordGenerator::getInstance();

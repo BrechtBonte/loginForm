@@ -1,5 +1,7 @@
 <?php
 
+namespace LoginForm\Includes;
+
 use LoginForm\Users\User;
 
 class UserPasswordGenerator {
@@ -16,12 +18,6 @@ class UserPasswordGenerator {
         }
         return self::$instance;
     }
-
-//    private function __construct() {
-//        if(self::$dataStore === null) {
-//            self::$dataStore = UserMysqlDatastore::getInstance();
-//        }
-//    }
 
     /* http://code.activestate.com/recipes/576894-generate-a-salt/ */
     private function generateSalt($max = 32) {

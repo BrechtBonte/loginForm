@@ -30,6 +30,14 @@ class Language {
     }
  
     public function __construct($name, $code) {
+        if($name === null || (string) $name === '') {
+            throw new \InvalidArgumentException('the $name parameter expects a non-empty string');
+        }
+        
+        if($code === null || (string) $code === '') {
+            throw new \InvalidArgumentException('the $code parameter expects a non-empty string');
+        }
+        
         $this->code = (string) $code;
         $this->name = (string) $name;
     }
