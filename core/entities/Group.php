@@ -32,9 +32,19 @@ class Group {
         return $this->users;
     }
 
-    function __construct($name) {
-        $this->name = $name;
+    public function __construct($name) {
+        if($name === null || (string)$name === '') {
+            throw new \InvalidArgumentException('the $name parameter should be a non-null string');
+        }
+        
+        $this->name = (string) $name;
         
         $this->users = new ArrayCollection();
+    }
+    
+    public function addUser(User $user) {
+        $this->users[] = $user;
+        $groups = $user->getGroups();
+        $groups[] = $this;
     }
 }
