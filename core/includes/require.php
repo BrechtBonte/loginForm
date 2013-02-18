@@ -1,6 +1,8 @@
 <?php
     session_start();
     
+    ini_set('memory_limit', '1024M');
+    
     define('APLICATION_PATH', __DIR__ . '/../../');
     
     /* AutoLoader */
@@ -22,4 +24,4 @@
     
 
     /* Initialize properties */
-    $userPassGen = UserPasswordGenerator::getInstance();
+    $userPassGen = LoginForm\Includes\UserPasswordGenerator::getInstance();

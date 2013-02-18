@@ -1,5 +1,5 @@
 <?php
-namespace LoginForm\Tests\Users;
+namespace LoginForm\Tests\Entities\Users;
 
 use LoginForm\Users\User;
 use LoginForm\Groups\Group;
@@ -14,7 +14,10 @@ class UserTest extends \PHPUnit_Framework_TestCase {
         $this->user = new User('name', 'password', 'salt', new Language('name', 'code'));
     }
     
-    /** @test @group getters */
+    /**
+     * @test
+     * @group getters
+     */
     public function idIsZero() {
         $this->assertEquals(0, $this->user->getId());
     }
@@ -36,7 +39,7 @@ class UserTest extends \PHPUnit_Framework_TestCase {
     
     /** @group getters */
     public function testGetLanguage() {
-        $this->assertInstanceOf('Language', $this->user->getLanguage());
+        $this->assertInstanceOf('LoginForm\Enums\Language', $this->user->getLanguage());
     }
     
     public function testSetLanguage() {
@@ -45,61 +48,87 @@ class UserTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame($language, $this->user->getLanguage());
     }
     
-    public function testAddGroup() {
+    /** @test */
+    public function UserAddsGroup() {
         $group = new Group('groupName');
         $this->user->addGroup($group);
         $this->assertContains($group, $this->user->getGroups());
         return $this->user;
     }
     
-    /** @depends testAddGroup */
+    /** @test */
+    public function GroupAddsUser() {
+        $group = new Group('groupName');
+        $this->user->addGroup($group);
+        $this->assertContains($this->user, $group->getUsers());
+    }
+    
+    /** @depends UserAddsGroup */
     public function testAddGroupCount(User $usr) {
         $this->assertCount(1, $usr->getGroups());
     }
     
-    /** @test @group faultyConstruct @group nullArgumentt */
+    /**
+     * @test
+     * @group faultyConstruct @group nullArgument
+     */
     public function NullAsName() {
         $this->setExpectedException('Exception');
         $user = new User(null, 'password', 'salt', new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
-    /** @test @group faultyConstruct @group nullArgument */
+    /**
+     * @test
+     * @group faultyConstruct @group nullArgument
+     */
     public function NullAsPassword() {
         $this->setExpectedException('Exception');
         $user = new User('name', null, 'salt', new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
-    /** @test @group faultyConstruct @group nullArgument */
+    /** @test
+     * @group faultyConstruct @group nullArgument */
     public function NullAsSalt() {
         $this->setExpectedException('Exception');
         $user = new User('name', 'password', null, new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
-    /** @test @group faultyConstruct @group emptyArgument */
+    /** @test
+     * @group faultyConstruct @group emptyArgument */
     public function EmptyName() {
         $this->setExpectedException('Exception');
         $user = new User(null, 'password', 'salt', new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
-    /** @test @group faultyConstruct @group emptyArgument */
+    /** @test
+     * @group faultyConstruct @group emptyArgument */
     public function EmptyPassword() {
         $this->setExpectedException('Exception');
         $user = new User('name', null, 'salt', new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
-    /** @test @group faultyConstruct @group emptyArgument */
+    /** @test
+     * @group faultyConstruct @group emptyArgument */
     public function EmptyAsSalt() {
         $this->setExpectedException('Exception');
         $user = new User('name', 'password', null, new Language('name', 'code'));
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
     /** @test */
     public function NullAsLanguage() {
         $user = new User('name', 'password', 'salt', null);
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
     
     public function testLanugageType() {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('Exception');
         $user = new User('name', 'password', 'salt', 'test');
-    }
+    // @codeCoverageIgnoreStart
+    } // @codeCoverageIgnoreEnd
 }

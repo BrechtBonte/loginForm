@@ -13,7 +13,7 @@
     $username = $user->getName();
 
     /* Load page */
-    $page = new Page('index');
+    $page = new LoginForm\Includes\Page('index');
     
     /* parse template */
     $page->setVars(array(

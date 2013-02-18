@@ -70,6 +70,16 @@ class User {
     }
 
     public function __construct($name, $password, $salt, Language $language = null) {
+        if($name === null || (string)$name === '') {
+            throw new \InvalidArgumentException('the $name attribute should be a non-empty string');
+        }
+        if($password === null || (string)$password === '') {
+            throw new \InvalidArgumentException('the $password attribute should be a non-empty string');
+        }
+        if($salt === null || (string)$salt === '') {
+            throw new \InvalidArgumentException('the $salt attribute should be a non-empty string');
+        }
+        
         $this->name = (string) $name;
         $this->password = (string) $password;
         $this->salt = (string) $salt;
@@ -84,7 +94,8 @@ class User {
 
     public function addGroup(Group $group) {
         $this->groups[] = $group;
-        array_push($group->getUsers(), $this);
+        $usrs = $group->getUsers();
+        $usrs[] = $this;
     }
 
 
