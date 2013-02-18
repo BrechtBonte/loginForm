@@ -14,8 +14,10 @@ class UserPasswordGenerator {
 
     public static function getInstance() {
         if(self::$instance === null) {
+        // @codeCoverageIgnoreStart
             self::$instance = new self();
         }
+        // @codeCoverageIgnoreEnd
         return self::$instance;
     }
 
